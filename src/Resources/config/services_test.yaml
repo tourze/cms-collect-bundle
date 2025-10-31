@@ -1,0 +1,13 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  # DataFixtures services for test environment
+  Tourze\CmsCollectBundle\DataFixtures\:
+    resource: '../../DataFixtures'
+    tags: ['doctrine.fixture.orm']
+
+  # 测试专用Dashboard控制器
+  Tourze\CmsCollectBundle\Tests\Controller\Admin\TestDashboardController:
+    tags: ['controller.service_arguments']

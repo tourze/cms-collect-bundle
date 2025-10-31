@@ -1,4 +1,4 @@
-# CMS Collect Bundle
+# CMS 收藏包
 
 [![PHP Version](https://img.shields.io/badge/php-%5E8.1-blue.svg)](https://php.net/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -7,34 +7,34 @@
 
 [English](README.md) | [中文](README.zh-CN.md)
 
-A Symfony bundle that provides user content collection functionality for CMS systems.
+一个为 CMS 系统提供用户内容收藏功能的 Symfony 包。
 
-## Features
+## 功能特性
 
-- User content collection/uncollection
-- Collection log tracking with user information
-- JSON-RPC API endpoint for collection operations
-- Event system for collection actions
-- Doctrine ORM integration
-- IP tracking and timestamp support
+- 用户内容收藏/取消收藏
+- 收藏日志跟踪，包含用户信息
+- JSON-RPC API 端点用于收藏操作
+- 收藏动作事件系统
+- Doctrine ORM 集成
+- IP 跟踪和时间戳支持
 
-## Requirements
+## 系统要求
 
 - PHP 8.1+
 - Symfony 6.4+
 - Doctrine ORM 3.0+
 
-## Installation
+## 安装
 
 ```bash
 composer require tourze/cms-collect-bundle
 ```
 
-## Configuration
+## 配置
 
-### Enable the Bundle
+### 启用包
 
-Add the bundle to your `config/bundles.php`:
+将包添加到您的 `config/bundles.php` 文件：
 
 ```php
 return [
@@ -43,19 +43,19 @@ return [
 ];
 ```
 
-### Database Setup
+### 数据库设置
 
-Run the doctrine migrations to create the required tables:
+运行 doctrine 迁移以创建所需的表：
 
 ```bash
 php bin/console doctrine:migrations:migrate
 ```
 
-## Usage
+## 使用方法
 
 ### JSON-RPC API
 
-The bundle provides a JSON-RPC procedure for collection operations:
+包提供了一个 JSON-RPC 过程用于收藏操作：
 
 ```json
 {
@@ -68,20 +68,20 @@ The bundle provides a JSON-RPC procedure for collection operations:
 }
 ```
 
-**Response:**
+**响应：**
 ```json
 {
     "jsonrpc": "2.0",
     "result": {
-        "__message": "Collection successful"
+        "__message": "收藏成功"
     },
     "id": 1
 }
 ```
 
-### Entity Usage
+### 实体使用
 
-The `CollectLog` entity tracks user collection actions:
+`CollectLog` 实体跟踪用户收藏动作：
 
 ```php
 use Tourze\CmsCollectBundle\Entity\CollectLog;
@@ -92,9 +92,9 @@ $collectLog->setEntity($entity);
 $collectLog->setValid(true);
 ```
 
-### Repository Usage
+### 仓储使用
 
-Use the repository to query collection logs:
+使用仓储查询收藏日志：
 
 ```php
 use Tourze\CmsCollectBundle\Repository\CollectLogRepository;
@@ -103,11 +103,11 @@ $repository = $entityManager->getRepository(CollectLog::class);
 $userCollections = $repository->findBy(['user' => $user, 'valid' => true]);
 ```
 
-## Advanced Usage
+## 高级用法
 
-### Custom Event Listeners
+### 自定义事件监听器
 
-Listen to collection events for custom functionality:
+监听收藏事件以实现自定义功能：
 
 ```php
 use CmsBundle\Event\CollectEntityEvent;
@@ -124,18 +124,18 @@ class CollectionEventSubscriber implements EventSubscriberInterface
 
     public function onCollectionChange(CollectEntityEvent $event): void
     {
-        // Custom logic for collection changes
+        // 收藏变化的自定义逻辑
         $entity = $event->getEntity();
         $user = $event->getSender();
         
-        // Log the collection action
-        // Send notifications
-        // Update statistics
+        // 记录收藏动作
+        // 发送通知
+        // 更新统计数据
     }
 }
 ```
 
-### Query Collections by User
+### 按用户查询收藏
 
 ```php
 use Tourze\CmsCollectBundle\Repository\CollectLogRepository;
@@ -166,9 +166,9 @@ class UserCollectionService
 }
 ```
 
-## Events
+## 事件
 
-The bundle dispatches `CollectEntityEvent` when collection state changes:
+包在收藏状态变化时调度 `CollectEntityEvent`：
 
 ```php
 use CmsBundle\Event\CollectEntityEvent;
@@ -176,24 +176,23 @@ use CmsBundle\Event\CollectEntityEvent;
 $event = new CollectEntityEvent();
 $event->setSender($user);
 $event->setEntity($entity);
-$event->setMessage('Collected content: ' . $entity->getTitle());
+$event->setMessage('收藏内容：' . $entity->getTitle());
 ```
 
-## Security
+## 安全
 
-This bundle requires user authentication through Symfony Security component. 
-All collection operations require the `IS_AUTHENTICATED_FULLY` attribute.
+该包需要通过 Symfony Security 组件进行用户认证。所有收藏操作都需要 `IS_AUTHENTICATED_FULLY` 属性。
 
-## Testing
+## 测试
 
 ```bash
-# Run tests
+# 运行测试
 vendor/bin/phpunit packages/cms-collect-bundle/tests
 
-# Run static analysis
+# 运行静态分析
 vendor/bin/phpstan analyse packages/cms-collect-bundle
 ```
 
-## License
+## 许可证
 
 MIT
