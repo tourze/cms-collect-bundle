@@ -8,6 +8,4 @@ services:
     resource: '../../DataFixtures'
     tags: ['doctrine.fixture.orm']
 
-  # 测试专用Dashboard控制器
-  Tourze\CmsCollectBundle\Tests\Controller\Admin\TestDashboardController:
-    tags: ['controller.service_arguments']
+  
