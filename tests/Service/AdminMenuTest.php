@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Tourze\CmsCollectBundle\Tests\Service;
 
 use Knp\Menu\ItemInterface;
-use Knp\Menu\MenuFactory;
-use Knp\Menu\MenuItem;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Tourze\CmsCollectBundle\Entity\CollectLog;
@@ -23,13 +21,10 @@ use Tourze\PHPUnitSymfonyWebTest\AbstractEasyAdminMenuTestCase;
 #[RunTestsInSeparateProcesses]
 final class AdminMenuTest extends AbstractEasyAdminMenuTestCase
 {
-    private LinkGeneratorInterface $linkGenerator;
-    private AdminMenu $adminMenu;
-
     protected function onSetUp(): void
     {
         // 创建测试专用的LinkGenerator实现，避免Mock导致的类型推断失败
-        $this->linkGenerator = new class implements LinkGeneratorInterface {
+        $linkGenerator = new class implements LinkGeneratorInterface {
             public function getCurdListPage(string $entityClass): string
             {
                 return match ($entityClass) {
@@ -52,25 +47,22 @@ final class AdminMenuTest extends AbstractEasyAdminMenuTestCase
             }
         };
 
-        self::getContainer()->set(LinkGeneratorInterface::class, $this->linkGenerator);
-        $this->adminMenu = self::getService(AdminMenu::class);
+        self::getContainer()->set(LinkGeneratorInterface::class, $linkGenerator);
     }
 
-    protected function getMenuProvider(): object
+    protected function getMenuService(): AdminMenu
     {
-        return $this->adminMenu;
+        return self::getService(AdminMenu::class);
     }
 
     public function testAdminMenuCreatesCmsCollectMenuWithCorrectItems(): void
     {
-        $this->assertInstanceOf(AdminMenu::class, $this->adminMenu);
-
-        // 创建真实的菜单项（使用MenuFactory和MenuItem，而不是Mock）
-        $factory = new MenuFactory();
-        $rootItem = new MenuItem('root', $factory);
+        // 创建真实的菜单项
+        $factory = new \Knp\Menu\MenuFactory();
+        $rootItem = new \Knp\Menu\MenuItem('root', $factory);
 
         // 执行菜单构建
-        $this->adminMenu->__invoke($rootItem);
+        $this->getMenuService()($rootItem);
 
         // 验证内容管理菜单被创建
         $cmsMenu = $rootItem->getChild('内容管理');
@@ -85,15 +77,13 @@ final class AdminMenuTest extends AbstractEasyAdminMenuTestCase
 
     public function testAdminMenuDoesNotCreateDuplicateCmsMenu(): void
     {
-        $this->assertInstanceOf(AdminMenu::class, $this->adminMenu);
-
-        // 创建已有内容管理菜单的主菜单
-        $factory = new MenuFactory();
-        $rootItem = new MenuItem('root', $factory);
+        // 创建真实的菜单项
+        $factory = new \Knp\Menu\MenuFactory();
+        $rootItem = new \Knp\Menu\MenuItem('root', $factory);
         $existingCmsMenu = $rootItem->addChild('内容管理');
 
         // 执行菜单构建
-        $this->adminMenu->__invoke($rootItem);
+        $this->getMenuService()($rootItem);
 
         // 验证使用了现有的内容管理菜单
         $cmsMenu = $rootItem->getChild('内容管理');

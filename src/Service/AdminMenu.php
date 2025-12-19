@@ -11,7 +11,7 @@ use Tourze\EasyAdminMenuBundle\Service\LinkGeneratorInterface;
 use Tourze\EasyAdminMenuBundle\Service\MenuProviderInterface;
 
 #[Autoconfigure(public: true)]
-readonly class AdminMenu implements MenuProviderInterface
+final readonly class AdminMenu implements MenuProviderInterface
 {
     public function __construct(private LinkGeneratorInterface $linkGenerator)
     {

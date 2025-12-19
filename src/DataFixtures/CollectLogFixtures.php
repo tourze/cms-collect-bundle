@@ -19,7 +19,7 @@ use Tourze\CmsCollectBundle\Entity\CollectLog;
  */
 #[When(env: 'test')]
 #[When(env: 'dev')]
-class CollectLogFixtures extends Fixture implements FixtureGroupInterface
+final class CollectLogFixtures extends Fixture implements FixtureGroupInterface
 {
     public const COLLECT_LOG_REFERENCE_PREFIX = 'collect-log-';
     public const COLLECT_LOG_COUNT = 20;

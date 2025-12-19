@@ -110,7 +110,7 @@ $userCollections = $repository->findBy(['user' => $user, 'valid' => true]);
 Listen to collection events for custom functionality:
 
 ```php
-use CmsBundle\Event\CollectEntityEvent;
+use Tourze\CmsBundle\Event\CollectEntityEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class CollectionEventSubscriber implements EventSubscriberInterface
@@ -171,7 +171,7 @@ class UserCollectionService
 The bundle dispatches `CollectEntityEvent` when collection state changes:
 
 ```php
-use CmsBundle\Event\CollectEntityEvent;
+use Tourze\CmsBundle\Event\CollectEntityEvent;
 
 $event = new CollectEntityEvent();
 $event->setSender($user);

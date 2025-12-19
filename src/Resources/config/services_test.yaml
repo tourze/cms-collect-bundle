@@ -3,9 +3,5 @@ services:
     autowire: true
     autoconfigure: true
 
-  # DataFixtures services for test environment
   Tourze\CmsCollectBundle\DataFixtures\:
     resource: '../../DataFixtures'
-    tags: ['doctrine.fixture.orm']
-
-  

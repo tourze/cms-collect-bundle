@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tourze\CmsCollectBundle\Entity;
 
-use CmsBundle\Entity\Entity;
+use Tourze\CmsBundle\Entity\Entity;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -33,7 +33,7 @@ class CollectLog implements \Stringable
     }
 
     #[ORM\ManyToOne(targetEntity: Entity::class)]
-    #[ORM\JoinColumn(onDelete: 'CASCADE', name: 'entity_id')]
+    #[ORM\JoinColumn(name: 'entity_id', onDelete: 'CASCADE')]
     private ?Entity $entity = null;
 
     #[ORM\ManyToOne(targetEntity: UserInterface::class)]

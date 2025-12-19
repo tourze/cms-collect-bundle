@@ -3,13 +3,15 @@ services:
   _defaults:
     autowire: true      # Automatically injects dependencies in your services.
     autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+    public: false
 
-  Tourze\CmsCollectBundle\Procedure\:
-    resource: '../../Procedure/'
-  Tourze\CmsCollectBundle\Repository\:
-    resource: '../../Repository/'
   Tourze\CmsCollectBundle\Controller\:
     resource: '../../Controller/'
-    tags: ['controller.service_arguments']
+  Tourze\CmsCollectBundle\Repository\:
+    resource: '../../Repository/'
   Tourze\CmsCollectBundle\Service\:
     resource: '../../Service/'
+    public: true
+  Tourze\CmsCollectBundle\Procedure\:
+    resource: '../../Procedure/'
+    public: true

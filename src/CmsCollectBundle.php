@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tourze\CmsCollectBundle;
 
-use CmsBundle\CmsBundle;
+use Tourze\CmsBundle\CmsBundle;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -13,7 +13,7 @@ use Tourze\EasyAdminMenuBundle\EasyAdminMenuBundle;
 use Tourze\JsonRPCLockBundle\JsonRPCLockBundle;
 use Tourze\JsonRPCSecurityBundle\JsonRPCSecurityBundle;
 
-class CmsCollectBundle extends Bundle implements BundleDependencyInterface
+final class CmsCollectBundle extends Bundle implements BundleDependencyInterface
 {
     public static function getBundleDependencies(): array
     {

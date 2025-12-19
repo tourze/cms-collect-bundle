@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tourze\CmsCollectBundle\Tests;
 
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -14,4 +16,10 @@ use Tourze\PHPUnitSymfonyKernelTest\AbstractBundleTestCase;
 #[RunTestsInSeparateProcesses]
 final class CmsCollectBundleTest extends AbstractBundleTestCase
 {
+    protected function onSetUp(): void
+    {
+        // 不需要额外的初始化逻辑
+    }
+
+    // 基类会自动运行所有必要的测试
 }

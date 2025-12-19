@@ -4,21 +4,23 @@ declare(strict_types=1);
 
 namespace Tourze\CmsCollectBundle\Procedure;
 
-use CmsBundle\Enum\EntityState;
-use CmsBundle\Event\CollectEntityEvent;
-use CmsBundle\Service\EntityService;
+use Tourze\CmsBundle\Enum\EntityState;
+use Tourze\CmsBundle\Event\CollectEntityEvent;
+use Tourze\CmsBundle\Service\EntityService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Tourze\CmsCollectBundle\Entity\CollectLog;
+use Tourze\CmsCollectBundle\Param\CollectCmsEntityParam;
 use Tourze\CmsCollectBundle\Repository\CollectLogRepository;
 use Tourze\JsonRPC\Core\Attribute\MethodDoc;
 use Tourze\JsonRPC\Core\Attribute\MethodExpose;
-use Tourze\JsonRPC\Core\Attribute\MethodParam;
 use Tourze\JsonRPC\Core\Attribute\MethodTag;
+use Tourze\JsonRPC\Core\Contracts\RpcParamInterface;
 use Tourze\JsonRPC\Core\Exception\ApiException;
+use Tourze\JsonRPC\Core\Result\ArrayResult;
 use Tourze\JsonRPCLockBundle\Procedure\LockableProcedure;
 use Tourze\JsonRPCLogBundle\Attribute\Log;
 use Tourze\UserIDBundle\Model\SystemUser;
@@ -29,11 +31,8 @@ use Tourze\UserIDBundle\Model\SystemUser;
 #[IsGranted(attribute: 'IS_AUTHENTICATED_FULLY')]
 #[Autoconfigure(public: true)]
 #[Log]
-class CollectCmsEntity extends LockableProcedure
+final class CollectCmsEntity extends LockableProcedure
 {
-    #[MethodParam(description: '文章ID')]
-    public int $entityId;
-
     public function __construct(
         private readonly EntityService $entityService,
         private readonly CollectLogRepository $collectLogRepository,
@@ -44,12 +43,12 @@ class CollectCmsEntity extends LockableProcedure
     }
 
     /**
-     * @return array<string, mixed>
+     * @phpstan-param CollectCmsEntityParam $param
      */
-    public function execute(): array
+    public function execute(CollectCmsEntityParam|RpcParamInterface $param): ArrayResult
     {
         $entity = $this->entityService->findEntitiesBy([
-            'id' => $this->entityId,
+            'id' => $param->entityId,
             'state' => EntityState::PUBLISHED,
         ])[0] ?? null;
         if (null === $entity) {
@@ -86,18 +85,12 @@ class CollectCmsEntity extends LockableProcedure
 
         $this->eventDispatcher->dispatch($event);
 
-        return [
+        return new ArrayResult([
             '__message' => (true === $log->isValid()) ? '收藏成功' : '已取消收藏',
-        ];
+        ]);
     }
 
     /**
      * @return array<string, mixed>|null
      */
-    public static function getMockResult(): ?array
-    {
-        return [
-            '__message' => 0 === rand(0, 1) ? '收藏成功' : '已取消收藏',
-        ];
-    }
 }
